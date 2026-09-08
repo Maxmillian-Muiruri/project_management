@@ -261,20 +261,6 @@ UpgradeLog*.htm
 ServiceFabricBackup/
 *.rptproj.bak
 
-# SQL Server files
-*.mdf
-*.ldf
-*.ndf
-
-# Business Intelligence projects
-*.rdl.data
-*.bim.layout
-*.bim_*.settings
-*.rptproj.rsuser
-*- [Bb]ackup.rdl
-*- [Bb]ackup ([0-9]).rdl
-*- [Bb]ackup ([0-9][0-9]).rdl
-
 # Microsoft Fakes
 FakesAssemblies/
 
@@ -361,3 +347,42 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# -----------------------
+# Project-specific additions
+# -----------------------
+
+# Local configuration and secrets (do NOT commit)
+**/appsettings.Development.json
+**/appsettings.*.Local.json
+.env
+.env.*
+secret.json
+secrets.json
+secrets/
+
+# Editor/workspace folders
+.vscode/
+.idea/
+
+# REST/HTTP client files created by IDEs/editors
+*.http
+*.rest
+
+# Ignore Visual Studio generated HTTP file present in workspace
+project_management.project_management.http
+project_management/*.http
+
+# Dotnet user-secrets store (if used)
+.secrets/
+
+# Optional: ignore local database files
+*.db
+*.sqlite
+*.sqlite3
+
+# macOS
+.DS_Store
+
+# Windows thumbnail cache
+Thumbs.db

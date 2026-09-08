@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using project_management.Models;
+using project_management.Services;
+using project_management.Data;
+using project_management.Dtos;
 
 namespace project_management.Controllers
 {
@@ -8,57 +11,75 @@ namespace project_management.Controllers
     [ApiController]
     public class productsController : ControllerBase
     {
-        static List<Product> products = new List<Product>
+        //static List<Product> products = new List<Product>
+        //{
+        //    new Product { Id = 1, Name = "Laptop", Price = 10.99m, Description = " laptop Description" },
+        //    new Product { Id = 2, Name = "smartphone", Price = 19.99m, Description = "smartphone Description" },
+        //    new Product { Id = 3, Name = "Tablet", Price = 5.99m, Description = "Tablet Description" }
+        //};
+
+        private readonly IProductService service; 
+
+        public productsController(IProductService productService)
         {
-            new Product { Id = 1, Name = "Laptop", Price = 10.99m, Description = " laptop Description" },
-            new Product { Id = 2, Name = "smartphone", Price = 19.99m, Description = "smartphone Description" },
-            new Product { Id = 3, Name = "Tablet", Price = 5.99m, Description = "Tablet Description" }
-        };
-        [HttpGet]
+            service = productService;
+        }
+        [HttpGet] 
         public IActionResult GetProducts()
         {
             // Sample data for demonstration purposes
             
-            return Ok(products);
+            return Ok(service.GetAllProducts());
         }
 
         [HttpGet]
         [Route("{id}")]
         public IActionResult GetProductById(int id)
         {
-            var response = products.FirstOrDefault(p => p.Id == id);
+            var response = service.GetProductById(id);
             if (response == null)
             {
                 return NotFound();
             }
             return Ok(response);
         }
+
+        [HttpPost]
+        public IActionResult CreateProduct(ProductRequest product)
+        {
+            var createdProduct = service.AddProduct(product);
+            return CreatedAtAction(nameof(GetProductById), new { id = createdProduct.Id }, createdProduct);
+        }
+
         [HttpPut]
         [Route("{id}")]
-        public IActionResult UpdateProduct(int id, Product updatedProduct)
+        public IActionResult UpdateProduct(int id, Product Product)
         {
-            var existingProduct = products.FirstOrDefault(p => p.Id == id);
-            if (existingProduct == null)
+            try
             {
-                return NotFound();
+                service.UpdateProduct(id, Product);
+                return NoContent(); // Return 204 No Content to indicate successful update
             }
-            // Update the properties of the existing product
-            existingProduct.Name = updatedProduct.Name;
-            existingProduct.Price = updatedProduct.Price;
-            existingProduct.Description = updatedProduct.Description;
-            return NoContent(); // Return 204 No Content to indicate successful update
+            catch (Exception ex)
+            {
+                // Handle the exception and return an appropriate response
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error updating product: {ex.Message}");
+            }   
         }
         [HttpDelete]
         [Route("{id}")]
         public IActionResult DeleteProduct(int id)
         {
-            var product = products.FirstOrDefault(p => p.Id == id);
-            if (product == null)
+            try
             {
-                return NotFound();
+                service.DeleteProduct(id);
+                return NoContent(); // Return 204 No Content to indicate successful deletion
             }
-            products.Remove(product);
-            return NoContent(); // Return 204 No Content to indicate successful deletion
+            catch (Exception ex)
+            {
+                // Handle the exception and return an appropriate response
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error deleting product: {ex.Message}");
+            }
         }
 
 

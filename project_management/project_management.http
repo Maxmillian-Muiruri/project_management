@@ -1,6 +1,52 @@
 @project_management_HostAddress = http://localhost:5158
 
-GET {{project_management_HostAddress}}/weatherforecast/
+GET {{project_management_HostAddress}}/api/products/
 Accept: application/json
 
-###
+### get product by id
+
+GET {{project_management_HostAddress}}/api/products/2
+Accept: application/json
+
+### Post product
+POST {{project_management_HostAddress}}/api/products/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "id" : 3,
+  "name": "smartphone 4",
+  "description": null,
+  "price": 199.99
+}
+
+### Post product
+POST {{project_management_HostAddress}}/api/products/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "id" : 34,
+  "name": "smartphone 9",
+  "description": null,
+  "price": 199.99
+}
+
+
+
+### update product
+PUT {{project_management_HostAddress}}/api/products/2
+Accept: application/json
+Content-Type: application/json
+
+{
+  "id" : 5,
+  "name": "smartphone 8",
+  "description": "available",
+  "price": 1959.99
+}
+
+### delete
+
+DELETE {{project_management_HostAddress}}/api/products/4
+Accept: application/json
